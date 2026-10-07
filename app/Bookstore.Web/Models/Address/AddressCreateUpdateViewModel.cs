@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Bookstore.Web.ViewModel.Address
 {
@@ -27,19 +28,19 @@ namespace Bookstore.Web.ViewModel.Address
 
         public int Id { get; set; }
 
-        public string AddressLine1 { get; set; }
+        public string AddressLine1 { get; set; } = null!;
 
-        public string AddressLine2 { get; set; }
+        public string AddressLine2 { get; set; } = null!;
 
-        public string City { get; set; }
+        public string City { get; set; } = null!;
 
-        public string State { get; set; }
+        public string State { get; set; } = null!;
 
-        public string Country { get; set; }
+        public string Country { get; set; } = null!;
 
-        public string ZipCode { get; set; }
+        public string ZipCode { get; set; } = null!;
 
-        public string ReturnUrl { get; set; }
+        public string ReturnUrl { get; set; } = null!;
 
         public IEnumerable<SelectListItem> States => new List<SelectListItem>
         {

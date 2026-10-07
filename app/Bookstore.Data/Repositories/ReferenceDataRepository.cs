@@ -1,8 +1,7 @@
 ﻿using Bookstore.Domain;
-using Bookstore.Domain.Books;
 using Bookstore.Domain.ReferenceData;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -24,7 +23,7 @@ namespace Bookstore.Data.Repositories
 
         async Task<ReferenceDataItem> IReferenceDataRepository.GetAsync(int id)
         {
-            return await dbContext.ReferenceData.FindAsync(id);
+            return (await dbContext.ReferenceData.FindAsync(id))!;
         }
 
         async Task<IEnumerable<ReferenceDataItem>> IReferenceDataRepository.FullListAsync()

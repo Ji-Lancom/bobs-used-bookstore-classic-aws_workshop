@@ -1,6 +1,5 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
-using System.Configuration;
 
 namespace BobsBookstoreClassic.Data
 {
@@ -10,25 +9,22 @@ namespace BobsBookstoreClassic.Data
 
         private static BookstoreConfiguration Instance => Lazy.Value;
 
-        private readonly Dictionary<string, string> _appSettings = new Dictionary<string, string>();
-        private readonly Dictionary<string, string> _connectionStrings = new Dictionary<string, string>();
+        private readonly Dictionary<string, string> _appSettings = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        private readonly Dictionary<string, string> _connectionStrings = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
-        private BookstoreConfiguration()
+        private BookstoreConfiguration() { }
+
+        public static void Initialize(IReadOnlyDictionary<string, string?> appSettings, IReadOnlyDictionary<string, string?> connectionStrings)
         {
-            foreach (string key in ConfigurationManager.AppSettings)
+            foreach (var kvp in appSettings)
             {
-                _appSettings[key] = ConfigurationManager.AppSettings[key];
-
-                if (Environment.GetEnvironmentVariable(key) != null)
-                {
-                    _appSettings[key] = Environment.GetEnvironmentVariable(key);
-                }
+                if (kvp.Value != null)
+                    Instance._appSettings[kvp.Key] = kvp.Value;
             }
-
-            foreach (ConnectionStringSettings connectionStringSettings in ConfigurationManager.ConnectionStrings)
+            foreach (var kvp in connectionStrings)
             {
-                _connectionStrings[connectionStringSettings.Name] = connectionStringSettings.ConnectionString;
-
+                if (kvp.Value != null)
+                    Instance._connectionStrings[kvp.Key] = kvp.Value;
             }
         }
 
@@ -37,15 +33,21 @@ namespace BobsBookstoreClassic.Data
             Instance._appSettings[key] = value;
         }
 
+        public static bool TryGetSetting(string key, out string? value)
+        {
+            return Instance._appSettings.TryGetValue(key, out value);
+        }
+
         public static string GetSetting(string key)
         {
-            return Instance._appSettings[key];
+            if (Instance._appSettings.TryGetValue(key, out var value))
+                return value;
+            return string.Empty;
         }
 
         public static T GetSetting<T>(string key)
         {
-            var value = Instance._appSettings[key];
-
+            var value = GetSetting(key);
             return (T)Convert.ChangeType(value, typeof(T));
         }
 
@@ -56,8 +58,9 @@ namespace BobsBookstoreClassic.Data
 
         public static string GetConnectionString(string key)
         {
-            return Instance._connectionStrings[key];
+            if (Instance._connectionStrings.TryGetValue(key, out var value))
+                return value;
+            return string.Empty;
         }
-
     }
 }

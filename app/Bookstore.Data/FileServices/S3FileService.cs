@@ -33,7 +33,7 @@ namespace Bookstore.Data.FileServices
 
         public async Task<string> SaveAsync(Stream contents, string filename)
         {
-            if (contents == null) return null;
+            if (contents == null) return null!;
 
             var bucketName = BookstoreConfiguration.GetSetting("Files/BucketName");
             var uniqueFilename = $"{Path.GetFileNameWithoutExtension(Path.GetRandomFileName())}{Path.GetExtension(filename)}";
