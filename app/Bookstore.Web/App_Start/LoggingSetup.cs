@@ -1,4 +1,4 @@
-﻿using BobsBookstoreClassic.Data;
+using BobsBookstoreClassic.Data;
 using Bookstore.Common;
 using NLog;
 using NLog.AWS.Logger;
@@ -9,7 +9,11 @@ namespace Bookstore.Web
 {
     public static class LoggingSetup
     {
-        public static void ConfigureLogging()
+        /// <summary>
+        /// Creates the NLog logging configuration used at startup.
+        /// NLog is configured as the logging provider for Microsoft.Extensions.Logging.
+        /// </summary>
+        public static LoggingConfiguration CreateNLogConfiguration()
         {
             var config = new LoggingConfiguration();
 
@@ -21,14 +25,13 @@ namespace Bookstore.Web
             }
             else
             {
-                loggingTarget = new DebuggerTarget();
+                loggingTarget = new DebuggerTarget("debugger");
             }
 
-            config.AddTarget("aws", loggingTarget);
+            config.AddTarget(loggingTarget);
+            config.LoggingRules.Add(new LoggingRule("*", NLog.LogLevel.Info, loggingTarget));
 
-            config.LoggingRules.Add(new LoggingRule("*", LogLevel.Info, loggingTarget));
-
-            LogManager.Configuration = config;
+            return config;
         }
     }
 }
