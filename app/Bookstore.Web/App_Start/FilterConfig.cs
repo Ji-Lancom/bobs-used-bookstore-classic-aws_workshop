@@ -1,13 +1,12 @@
-﻿using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Bookstore.Web
 {
     public class FilterConfig
     {
-        public static void RegisterGlobalFilters(GlobalFilterCollection filters)
+        public static void RegisterGlobalFilters(MvcOptions filters)
         {
-            filters.Add(new HandleErrorAttribute());
-            filters.Add(new AuthorizeAttribute());
+            filters.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
         }
     }
 }

@@ -1,10 +1,9 @@
-﻿using Bookstore.Domain;
-using Bookstore.Domain.Books;
+using Bookstore.Domain;
 using Bookstore.Domain.ReferenceData;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace Bookstore.Data.Repositories
 {
@@ -37,14 +36,10 @@ namespace Bookstore.Data.Repositories
             var query = dbContext.ReferenceData.AsQueryable();
 
             if (filters.ReferenceDataType.HasValue)
-            {
                 query = query.Where(x => x.DataType == filters.ReferenceDataType.Value);
-            }
 
             var result = new PaginatedList<ReferenceDataItem>(query, pageIndex, pageSize);
-
             await result.PopulateAsync();
-
             return result;
         }
 

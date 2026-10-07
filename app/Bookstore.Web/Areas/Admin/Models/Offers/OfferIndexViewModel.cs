@@ -1,10 +1,10 @@
-﻿using Bookstore.Domain;
+using Bookstore.Domain;
 using Bookstore.Domain.Offers;
 using Bookstore.Domain.ReferenceData;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web.Mvc;
 
 namespace Bookstore.Web.Areas.Admin.Models.Offers
 {
@@ -19,12 +19,12 @@ namespace Bookstore.Web.Areas.Admin.Models.Offers
                     OfferId = offer.Id,
                     BookName = offer.BookName,
                     Author = offer.Author,
-                    Genre = offer.Genre.Text,
-                    CustomerName = offer.Customer.FullName,
+                    Genre = offer.Genre!.Text,
+                    CustomerName = offer.Customer!.FullName,
                     OfferStatus = offer.OfferStatus,
                     OfferDate = offer.CreatedOn,
                     OfferPrice = offer.BookPrice,
-                    Condition = offer.Condition.Text
+                    Condition = offer.Condition!.Text
                 });
             }
 
@@ -41,7 +41,7 @@ namespace Bookstore.Web.Areas.Admin.Models.Offers
 
         public List<OfferIndexItemViewModel> Items { get; set; } = new List<OfferIndexItemViewModel>();
 
-        public OfferFilters Filters { get; set; }
+        public OfferFilters? Filters { get; set; }
 
         public IEnumerable<SelectListItem> Genres { get; set; } = new List<SelectListItem>();
 
@@ -52,13 +52,13 @@ namespace Bookstore.Web.Areas.Admin.Models.Offers
     {
         public int OfferId { get; set; }
 
-        public string BookName { get; set; }
+        public string? BookName { get; set; }
 
-        public string CustomerName { get; set; }
+        public string? CustomerName { get; set; }
 
-        public string Author { get; set; }
+        public string? Author { get; set; }
 
-        public string Genre { get; set; }
+        public string? Genre { get; set; }
 
         public OfferStatus OfferStatus { get; set; }
 
@@ -66,6 +66,6 @@ namespace Bookstore.Web.Areas.Admin.Models.Offers
 
         public decimal OfferPrice { get; internal set; }
 
-        public string Condition { get; internal set; }
+        public string? Condition { get; internal set; }
     }
 }

@@ -1,5 +1,5 @@
-﻿using Bookstore.Domain;
 using Bookstore.Domain.ReferenceData;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -11,7 +11,7 @@ namespace Bookstore.Web.Areas.Admin.Models.ReferenceData
 
         public ReferenceDataFilters Filters { get; set; } = new ReferenceDataFilters();
 
-        public ReferenceDataIndexViewModel(IPaginatedList<ReferenceDataItem> referenceDataItems, ReferenceDataFilters filters)
+        public ReferenceDataIndexViewModel(Bookstore.Domain.IPaginatedList<ReferenceDataItem> referenceDataItems, ReferenceDataFilters filters)
         {
             foreach (var item in referenceDataItems.OrderBy(x => x.DataType.ToString()))
             {
@@ -38,8 +38,8 @@ namespace Bookstore.Web.Areas.Admin.Models.ReferenceData
     {
         public int Id { get; set; }
 
-        public string Text { get; set; }
+        public string? Text { get; set; }
 
-        public string ReferenceDataType { get; set; }
+        public string? ReferenceDataType { get; set; }
     }
 }
