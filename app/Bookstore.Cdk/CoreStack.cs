@@ -107,12 +107,16 @@ public class CoreStack : Stack
             ViewerProtocolPolicy = ViewerProtocolPolicy.REDIRECT_TO_HTTPS
         };
 
+#pragma warning disable CS0612, CS0618
         var distribution = new CloudFrontWebDistribution(this, "CloudFrontDistribution", distProps);
+#pragma warning restore CS0612, CS0618
 
         _ = new StringParameter(this, "CloudFrontDistributionSSMParameter", new StringParameterProps
         {
             ParameterName = $"/{Constants.AppName}/Files/CloudFrontDomain",
+#pragma warning disable CS0612
             StringValue = $"https://{distribution.DistributionDomainName}"
+#pragma warning restore CS0612
         });
     }
 

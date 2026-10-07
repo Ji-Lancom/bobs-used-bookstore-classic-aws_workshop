@@ -1,9 +1,8 @@
 ﻿using Bookstore.Domain;
 using Bookstore.Domain.Books;
+using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -126,13 +125,13 @@ namespace Bookstore.Data.Repositories
 
         async Task IBookRepository.UpdateAsync(Book book)
         {
-            var existing = await dbContext.Book.FindAsync(book.Id);
+            var existing = (await dbContext.Book.FindAsync(book.Id))!;
 
             dbContext.Entry(existing).CurrentValues.SetValues(book);
 
             if (string.IsNullOrWhiteSpace(book.CoverImageUrl))
             {
-                dbContext.Entry(existing).Property(x => x.CoverImageUrl).IsModified = false;
+                dbContext.Entry(existing).Property(x => x.CoverImageUrl!).IsModified = false;
             }
         }
 
@@ -150,7 +149,7 @@ namespace Bookstore.Data.Repositories
                     LowStock = x.Count(y => y.Quantity > 0 && y.Quantity < Book.LowBookThreshold),
                     OutOfStock = x.Count(y => y.Quantity == 0),
                     StockTotal = x.Count()
-                }).SingleOrDefaultAsync();
+                }).SingleOrDefaultAsync() ?? new BookStatistics();
         }
     }
 }

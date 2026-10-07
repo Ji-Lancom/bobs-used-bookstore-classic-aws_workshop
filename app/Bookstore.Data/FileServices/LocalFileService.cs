@@ -24,7 +24,7 @@ namespace Bookstore.Data.FileServices
 
         public async Task<string> SaveAsync(Stream file, string filename)
         {
-            if (file == null) return null;
+            if (file == null) return null!;
 
             var imageFolder = Path.Combine(webRootPath, "images", "coverimages");
             var uniqueFilename = $"{Path.GetFileNameWithoutExtension(Path.GetRandomFileName())}{Path.GetExtension(filename)}";

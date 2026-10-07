@@ -1,10 +1,9 @@
-﻿using Amazon.Auth.AccessControlPolicy;
-using Bookstore.Domain;
+﻿using Bookstore.Domain;
 using Bookstore.Domain.Offers;
 using Bookstore.Domain.Orders;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -23,14 +22,14 @@ namespace Bookstore.Data.Repositories
         {
             var startOfMonth = DateTime.UtcNow.StartOfMonth();
 
-            return await dbContext.Offer
+            return (await dbContext.Offer
                 .GroupBy(x => 1)
                 .Select(x => new OfferStatistics
                 {
                     PendingOffers = x.Count(y => y.OfferStatus == OfferStatus.PendingApproval),
                     OffersThisMonth = x.Count(y => y.CreatedOn >= startOfMonth),
                     OffersTotal = x.Count()
-                }).SingleOrDefaultAsync();
+                }).SingleOrDefaultAsync()) ?? new OfferStatistics();
         }
 
         async Task IOfferRepository.AddAsync(Offer offer)
@@ -38,9 +37,9 @@ namespace Bookstore.Data.Repositories
             await Task.Run(() => dbContext.Offer.Add(offer));
         }
 
-        Task<Offer> IOfferRepository.GetAsync(int id)
+        async Task<Offer> IOfferRepository.GetAsync(int id)
         {
-            return dbContext.Offer.Include(x => x.Customer).SingleOrDefaultAsync(x => x.Id == id);
+            return (await dbContext.Offer.Include(x => x.Customer).SingleOrDefaultAsync(x => x.Id == id))!;
         }
 
         async Task<IPaginatedList<Offer>> IOfferRepository.ListAsync(OfferFilters filters, int pageIndex, int pageSize)

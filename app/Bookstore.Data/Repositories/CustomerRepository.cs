@@ -1,5 +1,5 @@
 ﻿using Bookstore.Domain.Customers;
-using System.Data.Entity;
+using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 
 namespace Bookstore.Data.Repositories
@@ -20,12 +20,12 @@ namespace Bookstore.Data.Repositories
 
         async Task<Customer> ICustomerRepository.GetAsync(int id)
         {
-            return await dbContext.Customer.FindAsync(id);
+            return (await dbContext.Customer.FindAsync(id))!;
         }
 
         async Task<Customer> ICustomerRepository.GetAsync(string sub)
         {
-            return await dbContext.Customer.SingleOrDefaultAsync(x => x.Sub == sub);
+            return (await dbContext.Customer.SingleOrDefaultAsync(x => x.Sub == sub))!;
         }
 
         async Task ICustomerRepository.SaveChangesAsync()
